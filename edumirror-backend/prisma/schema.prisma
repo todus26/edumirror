@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int      @id @default(autoincrement())
+  email             String   @unique
+  passwordHash      String   @map("password_hash")
+  name              String
+  userType          String   @map("user_type")
+  grade             String?
+  school            String?
+  phone             String?
+  presentationCount Int      @default(0) @map("presentation_count")
+  averageScore      Float    @default(0) @map("average_score")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id                 String   @id
+  userId             Int      @map("user_id")
+  title              String
+  theme              String
+  backgroundNoise    String?  @map("background_noise")
+  aiQuestionsEnabled Boolean  @default(true) @map("ai_questions_enabled")
+  expectedDuration   Int?     @map("expected_duration")
+  actualDuration     Int?     @map("actual_duration")
+  status             String   @default("created")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  user           User            @relation(fields: [userId], references: [id])
+  analysisResult AnalysisResult?
+  aiQuestions    AiQuestion[]
+  audioData       AudioData[]
+  realtimeMetrics RealtimeMetric[]
+
+  @@map("sessions")
+}
+
+model AnalysisResult {
+  id                 Int      @id @default(autoincrement())
+  sessionId          String   @unique @map("session_id")
+  result             String?
+  overallScore       Int?     @map("overall_score")
+  expressionScore    Int?     @map("expression_score")
+  comprehensionScore Int?     @map("comprehension_score")
+  deliveryScore      Int?     @map("delivery_score")
+  engagementScore    Int?     @map("engagement_score")
+  analysisData       String?  @map("analysis_data") // JSON
+  videoUrl           String?  @map("video_url") // 영상 URL
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  session Session @relation(fields: [sessionId], references: [id])
+
+  @@map("analysis_results")
+}
+
+model AiQuestion {
+  id          String   @id
+  sessionId   String   @map("session_id")
+  text        String
+  triggerTime Int?     @map("trigger_time")
+  difficulty  String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  session Session @relation(fields: [sessionId], references: [id])
+
+  @@map("ai_questions")
+}
+
+model AudioData {
+  id            Int       @id @default(autoincrement())
+  sessionId     String    @map("session_id")
+  filePath      String    @map("file_path")
+  transcription String?   // Whisper 결과
+  duration      Float?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  
+  session       Session   @relation(fields: [sessionId], references: [id])
+  
+  @@map("audio_data")
+}
+
+model RealtimeMetric {
+  id          Int       @id @default(autoincrement())
+  sessionId   String    @map("session_id")
+  metricType  String    @map("metric_type") // audio, gaze, gesture
+  data        String    // JSON 형태
+  timestamp   Float
+  createdAt   DateTime  @default(now()) @map("created_at")
+  
+  session     Session   @relation(fields: [sessionId], references: [id])
+  
+  @@map("realtime_metrics")
+}

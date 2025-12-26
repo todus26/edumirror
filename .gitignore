@@ -1,0 +1,61 @@
+# 환경 변수 파일 (절대 업로드 금지!)
+.env
+.env.local
+.env.production
+.env.development
+*.env
+
+# 의존성
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 빌드 결과물
+dist/
+build/
+.next/
+out/
+
+# IDE / 에디터
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 데이터베이스
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+database/*.db
+
+# 로그
+logs/
+*.log
+
+# 업로드 파일
+uploads/
+!uploads/.gitkeep
+
+# 분석 결과
+analysis/
+!analysis/.gitkeep
+
+# OS
+Thumbs.db
+.DS_Store
+
+# 프리즈마
+prisma/migrations/
+
+# 테스트 커버리지
+coverage/
+.nyc_output/
+
+# 임시 파일
+*.tmp
+*.temp
+.cache/
