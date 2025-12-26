@@ -1,7 +1,9 @@
 // API 기본 설정
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
-  WS_BASE_URL: import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000/ws',
+  BASE_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  WS_BASE_URL: (import.meta.env.VITE_API_URL || 'http://localhost:8000')
+    .replace('https://', 'wss://')
+    .replace('http://', 'ws://') + '/ws',
   TIMEOUT: 30000, // 30초
 };
 
