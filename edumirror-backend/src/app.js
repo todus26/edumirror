@@ -24,7 +24,8 @@ app.use(
       "http://localhost:5174",
       "http://192.168.56.1:5174",
       "http://localhost:5175",
-      "http://192.168.56.1:5175"
+      "http://192.168.56.1:5175",
+      "https://your-frontend-url.vercel.app"
     ],
     credentials: true,
   })
