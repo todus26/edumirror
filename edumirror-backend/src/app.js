@@ -25,7 +25,7 @@ app.use(
       "http://192.168.56.1:5174",
       "http://localhost:5175",
       "http://192.168.56.1:5175",
-      "https://your-frontend-url.vercel.app"
+      "https://edumirror-frontend.vercel.app"
     ],
     credentials: true,
   })
