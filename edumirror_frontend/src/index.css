@@ -1,9 +1,9 @@
+/* 기존 스타일을 유지하면서 Tailwind 추가 */
+@import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* 기존 스타일을 유지하면서 Tailwind 추가 */
-@import url('https://fonts.googleapis.com/css2?family=Love+Ya+Like+A+Sister&display=swap');
 
 /* 모바일 시뮬레이터 회색 테두리 제거 */
 * {
