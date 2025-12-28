@@ -90,22 +90,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* 상단 상태바 */}
-      <div className="bg-[#74CD79] px-4 py-2 text-white text-sm font-medium flex justify-between items-center">
-        <span>9:30</span>
-        <div className="flex space-x-1">
-          <div className="flex space-x-1">
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-          </div>
-          <div className="text-xs">📶</div>
-          <div className="text-xs">📶</div>
-          <div className="text-xs">🔋</div>
-        </div>
-      </div>
-
       {/* 상단 헤더 */}
       <div className="bg-[#74CD79] px-4 py-4 flex items-center">
         <button

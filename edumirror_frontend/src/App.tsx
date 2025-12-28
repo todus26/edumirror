@@ -356,7 +356,7 @@ function App() {
   };
 
   return (
-    <div className="App w-full bg-white min-h-screen relative">
+    <div className="App w-full bg-white min-h-screen relative lg:max-w-[480px] lg:mx-auto lg:shadow-xl">
       {renderPage()}
     </div>
   );
