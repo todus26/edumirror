@@ -252,6 +252,8 @@ function App() {
             onBackClick={handleBackToStudentDashboard}
             onNewPresentationClick={handleNewPresentationClick}
             onDetailedAnalysisClick={handleDetailedAnalysisClick}
+            onChatClick={handleChatClick}
+            onProfileClick={handleProfileClick}
           />
         );
         
@@ -296,6 +298,8 @@ function App() {
             onRecordClick={handleRecordClick}
             onNewPresentationClick={handleNewPresentationClick}
             onBackClick={handleBackFromHistory}
+            onChatClick={handleChatClick}
+            onProfileClick={handleProfileClick}
           />
         );
         
@@ -303,6 +307,8 @@ function App() {
         return (
           <ImprovementChat 
             onBackClick={handleBackFromChat}
+            onHomeClick={handleBackToStudentDashboard}
+            onProfileClick={handleProfileClick}
           />
         );
         
@@ -311,6 +317,8 @@ function App() {
           <UserProfile 
             onBackClick={handleBackFromProfile}
             onLogoutClick={handleLogout}
+            onHomeClick={handleBackToStudentDashboard}
+            onChatClick={handleChatClick}
           />
         );
         
@@ -329,6 +337,8 @@ function App() {
             studentId={selectedStudentId}
             onBackClick={handleBackFromStudentReport}
             onPresentationDetailClick={handleTeacherPresentationDetailClick}
+            onChatClick={handleTeacherImprovementChatClick}
+            onProfileClick={handleBackToTeacherDashboard}
           />
         );
 
@@ -356,7 +366,7 @@ function App() {
   };
 
   return (
-    <div className="App w-full bg-white min-h-screen relative lg:max-w-[480px] lg:mx-auto lg:shadow-xl">
+    <div className="App w-full bg-white min-h-screen">
       {renderPage()}
     </div>
   );

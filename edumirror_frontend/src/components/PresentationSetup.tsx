@@ -202,8 +202,8 @@ const PresentationSetup: React.FC<PresentationSetupProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* 상단 상태바 */}
-      <div className="bg-[#4C4C4C] px-4 py-2 text-white text-sm font-medium flex justify-between items-center">
+      {/* 상단 상태바 - 모바일에서만 표시 */}
+      <div className="lg:hidden bg-[#4C4C4C] px-4 py-2 text-white text-sm font-medium flex justify-between items-center">
         <span>9:30</span>
         <div className="flex items-center gap-2">
           <div className="flex gap-1">
@@ -230,7 +230,7 @@ const PresentationSetup: React.FC<PresentationSetupProps> = ({
       </div>
 
       {/* 메인 컨텐츠 스크롤 영역 */}
-      <div className="bg-[#404040] flex-1 overflow-y-auto px-7 py-6 space-y-8">
+      <div className="bg-[#404040] flex-1 overflow-y-auto px-4 lg:px-8 py-6 space-y-8 max-w-5xl mx-auto w-full">
         
         {/* 에러 메시지 */}
         {errorMessage && (

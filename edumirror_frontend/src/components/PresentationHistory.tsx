@@ -3,24 +3,37 @@ import { ArrowLeft, Play, Pause, Volume2, TrendingUp, Eye, BarChart3, Calendar, 
 import { Plus } from 'lucide-react';
 import { sessionService, type UserSessionItem } from '../api';
 import { analysisService } from '../api';
+import Navigation from './Navigation';
+import type { NavigationTab } from './Navigation';
 
 interface PresentationHistoryProps {
   onRecordClick?: (record: any) => void;
   onNewPresentationClick?: () => void;
   onBackClick?: () => void;
+  onChatClick?: () => void;
+  onProfileClick?: () => void;
 }
 
 const PresentationHistory: React.FC<PresentationHistoryProps> = ({ 
   onRecordClick, 
   onNewPresentationClick,
-  onBackClick
+  onBackClick,
+  onChatClick,
+  onProfileClick
 }) => {
+  const [activeTab, setActiveTab] = useState<NavigationTab>('home');
   const [selectedRecord, setSelectedRecord] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [presentations, setPresentations] = useState<UserSessionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPresentationDetail, setSelectedPresentationDetail] = useState<any>(null);
+
+  const handleNavClick = (tab: NavigationTab) => {
+    setActiveTab(tab);
+    if (tab === 'chat' && onChatClick) onChatClick();
+    else if (tab === 'profile' && onProfileClick) onProfileClick();
+  };
 
   // API 데이터 로드
   useEffect(() => {
@@ -137,6 +150,9 @@ const PresentationHistory: React.FC<PresentationHistoryProps> = ({
     // 상세 분석 화면
     return (
       <div className="min-h-screen bg-gray-50">
+        <Navigation activeTab={activeTab} onNavClick={handleNavClick} />
+        
+        <div className="lg:ml-64 pb-16 lg:pb-0 min-h-screen bg-gray-50 flex flex-col">
         
         {/* 상단 헤더 */}
         <div className="bg-white border-b border-gray-200 px-4 py-3">
@@ -156,7 +172,7 @@ const PresentationHistory: React.FC<PresentationHistoryProps> = ({
           </div>
         </div>
 
-        <div className="p-4 space-y-6">
+        <div className="p-4 lg:p-8 space-y-6 max-w-7xl mx-auto w-full overflow-y-auto flex-1">
           {/* 발표 영상 */}
           <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
             <div className="aspect-video bg-gray-900 flex items-center justify-center relative">
@@ -322,31 +338,21 @@ const PresentationHistory: React.FC<PresentationHistoryProps> = ({
             </button>
           </div>
         </div>
+        </div>
       </div>
     );
   }
 
   // 기록 목록 화면
   return (
-    <div className="min-h-screen bg-[#ECF2ED] flex flex-col">
-      {/* 상단 상태바 */}
-      <div className="bg-[#74CD79] px-4 py-2 text-white text-sm font-medium flex justify-between items-center">
-        <span>9:30</span>
-        <div className="flex space-x-1">
-          <div className="flex space-x-1">
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-            <div className="w-1 h-1 bg-white rounded-full"></div>
-          </div>
-          <div className="text-xs">📶</div>
-          <div className="text-xs">📶</div>
-          <div className="text-xs">🔋</div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#ECF2ED]">
+      {/* 네비게이션 */}
+      <Navigation activeTab={activeTab} onNavClick={handleNavClick} />
 
+      {/* 메인 컨텐츠 영역 */}
+      <div className="lg:ml-64 pb-16 lg:pb-0 min-h-screen bg-[#ECF2ED] flex flex-col">
       {/* 상단 헤더 */}
-      <div className="bg-[#74CD79] px-4 py-4 flex justify-between items-center">
+      <div className="bg-[#74CD79] px-4 lg:px-8 py-4 flex justify-between items-center w-full">
         <div className="flex items-center space-x-3">
           <button
             onClick={onBackClick}
@@ -354,8 +360,8 @@ const PresentationHistory: React.FC<PresentationHistoryProps> = ({
           >
             <ArrowLeft className="w-6 h-6 text-white" />
           </button>
+          <h1 className="text-white text-xl font-bold">내 발표 기록</h1>
         </div>
-        <h1 className="text-white text-xl font-bold">내 발표 기록</h1>
         <button
           onClick={onNewPresentationClick}
           className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-[20px] flex items-center space-x-2 border border-white/30"
@@ -366,7 +372,7 @@ const PresentationHistory: React.FC<PresentationHistoryProps> = ({
       </div>
 
       {/* 성과 요약 */}
-      <div className="p-4">
+      <div className="flex-1 p-4 lg:px-8 overflow-y-auto max-w-7xl mx-auto w-full">
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-[#74CD79]" />
@@ -459,6 +465,7 @@ const PresentationHistory: React.FC<PresentationHistoryProps> = ({
                 ))
               )}
             </div>
+      </div>
       </div>
     </div>
   );

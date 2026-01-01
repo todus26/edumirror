@@ -106,7 +106,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         </div>
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="p-4 lg:p-8 space-y-6 max-w-6xl mx-auto w-full">
         {/* 학급 요약 */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">2학년 3반 현황</h2>

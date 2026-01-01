@@ -1,5 +1,7 @@
 import React from 'react';
 import { ArrowLeft, MessageSquare, Send } from 'lucide-react';
+import Navigation from './Navigation';
+import type { NavigationTab } from './Navigation';
 
 interface ChatMessage {
   id: string;
@@ -9,10 +11,27 @@ interface ChatMessage {
 }
 
 interface ImprovementChatProps {
-  onBackClick: () => void;
+  onBackClick?: () => void;
+  onHomeClick?: () => void;
+  onProfileClick?: () => void;
 }
 
-const ImprovementChat: React.FC<ImprovementChatProps> = ({ onBackClick }) => {
+const ImprovementChat: React.FC<ImprovementChatProps> = ({ 
+  onBackClick,
+  onHomeClick,
+  onProfileClick 
+}) => {
+  const [activeTab, setActiveTab] = React.useState<NavigationTab>('chat');
+
+  const handleNavClick = (tab: NavigationTab) => {
+    setActiveTab(tab);
+    if (tab === 'home' && onHomeClick) {
+      onHomeClick();
+    } else if (tab === 'profile' && onProfileClick) {
+      onProfileClick();
+    }
+  };
+
   const [messages, setMessages] = React.useState<ChatMessage[]>([
     {
       id: '1',
@@ -88,111 +107,119 @@ const ImprovementChat: React.FC<ImprovementChatProps> = ({ onBackClick }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* 상단 헤더 */}
-      <div className="bg-[#74CD79] px-4 py-4 flex items-center">
-        <button
-          onClick={onBackClick}
-          className="mr-4 p-2 rounded-full hover:bg-white/10 transition-colors"
-        >
-          <ArrowLeft className="w-6 h-6 text-white" />
-        </button>
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-sm">AI</span>
-          </div>
-          <div>
-            <h1 className="text-white text-xl font-bold">개선 가이드</h1>
-            <p className="text-white/80 text-sm">AI 발표 코치</p>
-          </div>
-        </div>
-      </div>
-
-      {/* 채팅 메시지 영역 */}
-      <div className="flex-1 px-4 py-4 space-y-4 overflow-y-auto">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-          >
-            <div className={`max-w-xs lg:max-w-md ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
-              {message.type === 'ai' && (
-                <div className="flex items-center space-x-2 mb-2">
-                  <div className="w-8 h-8 bg-[#74CD79] rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-xs">AI</span>
-                  </div>
-                  <span className="text-xs text-gray-500">{formatTime(message.timestamp)}</span>
-                </div>
-              )}
-              
-              <div
-                className={`px-4 py-3 rounded-2xl ${
-                  message.type === 'user'
-                    ? 'bg-[#74CD79] text-white'
-                    : 'bg-white text-gray-900 shadow-sm border border-gray-100'
-                }`}
+    <div className="min-h-screen bg-[#ECF2ED]">
+      <Navigation activeTab={activeTab} onNavClick={handleNavClick} />
+      
+      <div className="lg:ml-64 pb-16 lg:pb-0 min-h-screen bg-[#ECF2ED] flex flex-col">
+        {/* 상단 헤더 */}
+        <div className="bg-[#74CD79] px-4 lg:px-8 py-4 flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            {onBackClick && (
+              <button
+                onClick={onBackClick}
+                className="p-2 rounded-full hover:bg-white/10 transition-colors"
               >
-                <div className="text-left text-sm leading-relaxed whitespace-pre-line">
-                  {message.message}
-                </div>
+                <ArrowLeft className="w-6 h-6 text-white" />
+              </button>
+            )}
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-sm">AI</span>
               </div>
-              
-              {message.type === 'user' && (
-                <div className="flex items-center justify-end space-x-2 mt-2">
-                  <span className="text-xs text-gray-500">{formatTime(message.timestamp)}</span>
-                </div>
-              )}
+              <div>
+                <h1 className="text-white text-xl font-bold">개선 가이드</h1>
+                <p className="text-white/80 text-sm">AI 발표 코치</p>
+              </div>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* 추천 질문 버튼들 */}
-      <div className="px-4 py-2">
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => setNewMessage('발음 연습 방법을 더 알려주세요')}
-            className="px-3 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
-          >
-            발음 연습 방법
-          </button>
-          <button
-            onClick={() => setNewMessage('시선 처리 연습은 어떻게 하나요?')}
-            className="px-3 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
-          >
-            시선 처리 연습
-          </button>
-          <button
-            onClick={() => setNewMessage('다음 발표 주제 추천해주세요')}
-            className="px-3 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
-          >
-            주제 추천
-          </button>
         </div>
-      </div>
 
-      {/* 메시지 입력 영역 */}
-      <div className="px-4 py-4 bg-white border-t border-gray-200">
-        <div className="flex items-center space-x-3">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            placeholder="발표 관련 질문을 입력해주세요..."
-            className="flex-1 px-4 py-3 bg-gray-100 rounded-full border-none focus:outline-none focus:ring-2 focus:ring-[#74CD79] focus:bg-white transition-colors"
-          />
-          <button
-            onClick={handleSendMessage}
-            disabled={!newMessage.trim()}
-            className={`p-3 rounded-full transition-colors ${
-              newMessage.trim()
-                ? 'bg-[#74CD79] text-white hover:bg-[#5FB366]'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            <Send className="w-5 h-5" />
-          </button>
+        {/* 채팅 메시지 영역 */}
+        <div className="flex-1 px-4 lg:px-8 py-4 space-y-4 overflow-y-auto">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`max-w-xs lg:max-w-xl ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                {message.type === 'ai' && (
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="w-8 h-8 bg-[#74CD79] rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-xs">AI</span>
+                    </div>
+                    <span className="text-xs text-gray-500">{formatTime(message.timestamp)}</span>
+                  </div>
+                )}
+                
+                <div
+                  className={`px-4 py-3 rounded-2xl ${
+                    message.type === 'user'
+                      ? 'bg-[#74CD79] text-white'
+                      : 'bg-white text-gray-900 shadow-sm border border-gray-100'
+                  }`}
+                >
+                  <div className="text-left text-sm leading-relaxed whitespace-pre-line">
+                    {message.message}
+                  </div>
+                </div>
+                
+                {message.type === 'user' && (
+                  <div className="flex items-center justify-end space-x-2 mt-2">
+                    <span className="text-xs text-gray-500">{formatTime(message.timestamp)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 추천 질문 버튼들 */}
+        <div className="px-4 lg:px-8 py-2">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setNewMessage('발음 연습 방법을 더 알려주세요')}
+              className="px-3 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              발음 연습 방법
+            </button>
+            <button
+              onClick={() => setNewMessage('시선 처리 연습은 어떻게 하나요?')}
+              className="px-3 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              시선 처리 연습
+            </button>
+            <button
+              onClick={() => setNewMessage('다음 발표 주제 추천해주세요')}
+              className="px-3 py-2 bg-white rounded-full text-sm text-gray-600 border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              주제 추천
+            </button>
+          </div>
+        </div>
+
+        {/* 메시지 입력 영역 */}
+        <div className="px-4 lg:px-8 py-4 bg-white border-t border-gray-200">
+          <div className="flex items-center space-x-3">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="발표 관련 질문을 입력해주세요..."
+              className="flex-1 px-4 py-3 bg-gray-100 rounded-full border-none focus:outline-none focus:ring-2 focus:ring-[#74CD79] focus:bg-white transition-colors"
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!newMessage.trim()}
+              className={`p-3 rounded-full transition-colors ${
+                newMessage.trim()
+                  ? 'bg-[#74CD79] text-white hover:bg-[#5FB366]'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
     </div>

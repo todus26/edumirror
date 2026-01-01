@@ -22,15 +22,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onPresentationClick }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 상단 상태바 */}
-      <div className="bg-[#74CD79] px-4 py-2 text-white text-sm font-medium flex justify-between items-center">
-        <span>9:30</span>
-        <div className="flex space-x-1">
-          <span>📶</span>
-          <span>📶</span>
-          <span>🔋</span>
-        </div>
-      </div>
+    
 
       {/* 메인 컨텐츠 */}
       <div className="px-4 py-6 space-y-4">

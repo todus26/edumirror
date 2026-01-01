@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Home, MessageSquare, User, Plus, MoreVertical, Loader2, AlertCircle, FileText } from 'lucide-react';
+import { Plus, Loader2, AlertCircle, FileText } from 'lucide-react';
 import springIcon from '../assets/note-spring.svg';
 import { sessionService } from '../api';
+import Navigation from './Navigation';
+import type { NavigationTab } from './Navigation';
 
 interface PresentationRecord {
   id: string;
@@ -30,7 +32,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingRef, setIsLoadingRef] = useState(false);
-  const [activeTab, setActiveTab] = useState<'home' | 'chat' | 'profile'>('home');
+  const [activeTab, setActiveTab] = useState<NavigationTab>('home');
 
   const loadPresentationRecords = async (nextPage = 1) => {
     if (isLoadingRef) {
@@ -127,63 +129,19 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
     }
   };
 
-  const handleNavClick = (tab: 'home' | 'chat' | 'profile') => {
+  const handleNavClick = (tab: NavigationTab) => {
     setActiveTab(tab);
     if (tab === 'chat') onChatClick();
     else if (tab === 'profile') onProfileClick();
   };
 
   return (
-    <div className="min-h-screen bg-[#ECF2ED] flex">
-      {/* 데스크톱 왼쪽 사이드바 (1024px 이상에서만 표시) */}
-      <div className="hidden lg:flex lg:flex-col lg:w-64 lg:bg-white lg:border-r lg:border-gray-200">
-        {/* 로고 영역 */}
-        <div className="p-6 border-b border-gray-200">
-          <h1 className="text-2xl font-bold text-[#74CD79]">EduMirror</h1>
-        </div>
-        
-        {/* 네비게이션 메뉴 */}
-        <nav className="flex-1 p-4 space-y-2">
-          <button
-            onClick={() => handleNavClick('chat')}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-              activeTab === 'chat' 
-                ? 'bg-[#74CD79] text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <MessageSquare className="w-5 h-5" />
-            <span className="font-medium">메시지</span>
-          </button>
-          
-          <button
-            onClick={() => handleNavClick('home')}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-              activeTab === 'home' 
-                ? 'bg-[#74CD79] text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <Home className="w-5 h-5" />
-            <span className="font-medium">홈 화면</span>
-          </button>
-          
-          <button
-            onClick={() => handleNavClick('profile')}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-              activeTab === 'profile' 
-                ? 'bg-[#74CD79] text-white' 
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-          >
-            <User className="w-5 h-5" />
-            <span className="font-medium">내 정보</span>
-          </button>
-        </nav>
-      </div>
+    <div className="min-h-screen bg-[#ECF2ED]">
+      {/* 네비게이션 */}
+      <Navigation activeTab={activeTab} onNavClick={handleNavClick} />
 
       {/* 메인 컨텐츠 영역 */}
-      <div className="flex-1 flex flex-col">
+      <div className="lg:ml-64 min-h-screen flex flex-col pb-16 lg:pb-0">
         {/* 상단 헤더 */}
         <div className="bg-[#74CD79] px-4 lg:px-8 py-4 lg:py-6 flex justify-between items-center">
           <h1 className="text-white text-xl lg:text-2xl font-bold">내 발표 기록</h1>
@@ -197,7 +155,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
         </div>
 
         {/* 발표 기록 영역 */}
-        <div className="flex-1 py-6 px-5 lg:px-8 space-y-6 overflow-y-auto">
+        <div className="flex-1 py-6 px-5 lg:px-8 space-y-6 overflow-y-auto max-w-full">
           {loading ? (
             <div className="flex flex-col items-center justify-center h-64 text-center">
               <Loader2 className="h-8 w-8 animate-spin text-[#74CD79] mb-4" />
@@ -234,7 +192,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
                 <div
                   key={record.id}
                   onClick={() => onRecordClick(record)}
-                  className="justify-center max-w-80 lg:max-w-full mx-auto relative cursor-pointer hover:opacity-50 transition-opacity"
+                  className="max-w-md lg:max-w-2xl xl:max-w-4xl mx-auto relative cursor-pointer hover:opacity-50 transition-opacity"
                 >
                   <div className="h-24 lg:h-32 relative">
                     <div className="absolute inset-0 bg-green-400 rounded-[20px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] transform translate-x-1" />
@@ -280,32 +238,6 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({
               )}
             </>
           )}
-        </div>
-
-        {/* 하단 네비게이션 (모바일/태블릿에서만 표시) */}
-        <div className="lg:hidden bg-white border-t border-gray-200 px-4 py-2">
-          <div className="flex justify-center items-center space-x-16">
-            <button
-              onClick={() => handleNavClick('chat')}
-              className="p-3 rounded-full hover:bg-gray-100 transition-colors"
-            >
-              <MessageSquare className={`w-6 h-6 ${activeTab === 'chat' ? 'text-[#74CD79]' : 'text-gray-600'}`} />
-            </button>
-
-            <button 
-              onClick={() => handleNavClick('home')}
-              className={`p-3 rounded-full ${activeTab === 'home' ? 'bg-[#74CD79] text-white' : 'hover:bg-gray-100'}`}
-            >
-              <Home className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={() => handleNavClick('profile')}
-              className="p-3 rounded-full hover:bg-gray-100 transition-colors"
-            >
-              <User className={`w-6 h-6 ${activeTab === 'profile' ? 'text-[#74CD79]' : 'text-gray-600'}`} />
-            </button>
-          </div>
         </div>
       </div>
     </div>
